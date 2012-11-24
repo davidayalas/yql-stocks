@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<table xmlns="http://query.yahooapis.com/v1/schema/table.xsd"> 
+    <meta> 
+        <author>http://gplus.to/davidayalas</author> 
+        <documentationURL></documentationURL> 
+    </meta> 
+    <bindings> 
+        <select itemPath="" produces="XML"> 
+            <urls> 
+                <url></url> 
+            </urls> 
+            <inputs> 
+				<key id="url" type="xs:string" paramType="variable" required="false" />
+            </inputs> 
+ 
+            <execute><![CDATA[
+
+            	//yql console query example: use "https://dl.dropbox.com/u/17397489/lab/stocks/stocks.xml" as bolsa; select * from bolsa where url="http://www.eleconomista.es/indice/IBEX-35/resumen"
+            	
+				var stocks = {
+					exec : function(inputurl){
+						var _url = inputurl || "http://www.eleconomista.es/indice/IBEX-35/resumen";
+						var query = y.query("select * from html where url=@url and xpath=\"//form/table/tbody/tr\"",{url:_url}); 
+
+						var _return = <items />, it, cells,cont=0,aux;
+						for(var k in query.results.tr){
+							if(cont>0){
+								it = query.results.tr[k];
+								cells = it..td;
+								it=<item />;
+								for(var td in cells){
+									switch(td){
+										case "0":
+											aux=cells[td].strong.a.text();
+											it.item += <name>{aux}</name>
+											break;
+										case "1":
+											it.item += <last>{cells[td].span.text()}</last>
+											break;
+										case "3":
+											it.item += <var>{cells[td].span.text()}</var>
+											break;
+										case "4":
+											it.item += <var_euro>{cells[td].span.text()}</var_euro>
+											break;
+										case "5":
+											it.item += <volume>{cells[td].span.text()}</volume>
+											break;
+										case "9":
+											it.item += <time>{cells[td].span.text()}</time>
+											break;
+									}
+								}
+								if(aux.length()>0){
+									_return.items += it;
+								}
+							}
+							cont++;
+						}
+						return _return;
+					}
+				}
+				
+				response.object = stocks.exec(url);
+				
+            ]]></execute> 
+        </select> 
+ 
+     </bindings> 
+</table>    
+ 
