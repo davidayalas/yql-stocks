@@ -22,11 +22,11 @@
 						var _url = inputurl || "http://www.eleconomista.es/indice/IBEX-35/resumen";
 						var query = y.query("select * from html where url=@url and xpath=\"//form/table/tbody/tr\"",{url:_url}); 
 
-						var _return = <items />, it, cells,cont=0,aux;
+						var _return = <items />, it, cells,cont=0,aux,currency;
 						for(var k in query.results.tr){
+							it = query.results.tr[k];
+							cells = it..td;
 							if(cont>0){
-								it = query.results.tr[k];
-								cells = it..td;
 								it=<item />;
 								for(var td in cells){
 									switch(td){
@@ -41,7 +41,7 @@
 											it.item += <var>{cells[td].span.text()}</var>
 											break;
 										case "4":
-											it.item += <var_euro>{cells[td].span.text()}</var_euro>
+											it.item += <var_{currency}>{cells[td].span.text()}</var_{currency}>
 											break;
 										case "5":
 											it.item += <volume>{cells[td].span.text()}</volume>
@@ -54,6 +54,8 @@
 								if(aux.length()>0){
 									_return.items += it;
 								}
+							}else{
+								currency = cells["4"].toString().indexOf("€")>-1?"euro":"dollar";
 							}
 							cont++;
 						}
