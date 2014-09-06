@@ -15,7 +15,7 @@
  
             <execute><![CDATA[
 
-            	//yql console query example: use "https://raw.github.com/davidayalas/yql-stocks/master/stocks.xml" as stocks; select * from stocks where url="http://www.eleconomista.es/indice/IBEX-35/resumen"
+            	//yql console query example: use "https://raw.githubusercontent.com/davidayalas/yql-stocks/master/stocks.xml" as stocks; select * from stocks where url="http://www.eleconomista.es/indice/IBEX-35/resumen"
             	
 				var stocks = {
 					exec : function(inputurl){
