@@ -20,13 +20,13 @@
 				var stocks = {
 					exec : function(inputurl){
 						var _url = inputurl || "http://www.eleconomista.es/indice/IBEX-35/resumen";
-						var query = y.query("select * from html where url=@url and xpath=\"//form/table/tbody/tr\"",{url:_url}); 
+						var query = y.query("select * from html where url=@url and xpath=\"//table/tbody/tr\"",{url:_url}); 
 
 						var _return = <items />, it, cells,cont=0,aux,currency;
-						for(var k in query.results.tr){
+						for(k in query.results.tr){
 							it = query.results.tr[k];
 							cells = it..td;
-							if(cont>0){
+							if(cont>2){
 								it=<item />;
 								for(var td in cells){
 									switch(td){
@@ -55,7 +55,9 @@
 									_return.items += it;
 								}
 							}else{
-								currency = cells["4"].toString().indexOf("€")>-1?"euro":"dollar";
+								if(cells["4"]){
+									currency = cells["4"].indexOf("€")>-1?"euro":"dollar";
+								}
 							}
 							cont++;
 						}
